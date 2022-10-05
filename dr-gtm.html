@@ -1,0 +1,29 @@
+<script>
+  var url = "https://api.decisionrules.io/rule/solve/your-rule-id"; // Enter your rule ID here
+  var solverKey = "your-solver-api-key"; // Enter your Solver API Key here
+  var data = {"data":{"Input attribute":"Call to DecisionRules"}}; // Enter your input data here
+  var drResponse = null;
+
+  fetch(url, {
+    method: "POST",
+    headers: {"Content-Type": "application/json",
+      "Authorization": "Bearer " + solverKey},
+    body: JSON.stringify(data)
+  }).then(function (res) {
+    return res.json();
+  }).then(function (data) {
+    
+    // Use the response here
+    console.log("Response from DecisionRules was", data);
+    drResponse = data;
+    
+    // Trigger a custom event "dr-response" in GTM & save data to variable "dr-response-data"
+    dataLayer.push({
+      'event': 'dr-response',
+      'dr-response-data': drResponse[0]["Output Attribute"]
+    });
+
+  }).catch(function (e) {
+    console.log("DR Error", e);
+  });
+</script>
